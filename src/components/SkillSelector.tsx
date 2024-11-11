@@ -323,7 +323,7 @@ if (searchTerm) {
         {alert.show && (
           <Alert 
             variant={alert.type} 
-            className="fixed bottom-4 right-4 w-auto"
+    className="fixed bottom-4 right-4 w-auto bg-gray-800 border-gray-700 text-white"
           >
             <div className="flex items-center">
               <AlertCircle className="h-4 w-4 mr-2" />
