@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { X, AlertCircle, Search } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { getAllSkills, getSkillsByCategory, getCategories } from '@/lib/skills';
 import { getAllCareers, getCareerById, getCareersBySkill } from '@/lib/careers';
 
+// Define the interface
 interface CategoryButtonProps {
   category: string;
   isActive: boolean;
@@ -13,7 +14,7 @@ interface CategoryButtonProps {
   onClick: () => void;
 }
 
-const CategoryButton = ({ category, isActive, isDisabled, onClick }) => {
+const CategoryButton: React.FC<CategoryButtonProps> = React.memo(({ category, isActive, isDisabled, onClick }) => {
   // Color mapping for categories
   const categoryColors = {
     'Combat': 'from-red-900 to-red-800',
@@ -44,7 +45,7 @@ const CategoryButton = ({ category, isActive, isDisabled, onClick }) => {
       {category}
     </button>
   );
-};
+});
 
 // Rest of the component code remains exactly the same
 const SkillSelector = () => {
@@ -62,7 +63,7 @@ const SkillSelector = () => {
     return getCareersBySkill(skillId).map(career => career.name);
   };
 
-  const getSkillCategory = (skillId) => {
+  const getSkillCategory = useCallback((skillId: string): string | null => {
     for (const category of categories) {
       const categorySkills = getSkillsByCategory(category);
       if (categorySkills.some(skill => skill.id === skillId)) {
@@ -70,7 +71,8 @@ const SkillSelector = () => {
       }
     }
     return null;
-  };
+  }, [categories]);
+  
 
   // Calculate available categories based on selected career
   const availableCategories = useMemo(() => {
