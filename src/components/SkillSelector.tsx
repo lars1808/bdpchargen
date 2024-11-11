@@ -14,7 +14,13 @@ interface CategoryButtonProps {
   onClick: () => void;
 }
 
-
+interface Skill {
+  id: string;
+  name: string;
+  description: string;
+  category?: string | null;  // optional because it might not exist in raw data
+  relatedCareers?: string[];  // optional because it might not exist in raw data
+}
 
 const CategoryButton: React.FC<CategoryButtonProps> = React.memo(({ category, isActive, isDisabled, onClick }) => {
   // Color mapping for categories
@@ -54,13 +60,7 @@ CategoryButton.displayName = 'CategoryButton';
 
 // Rest of the component code remains exactly the same
 const SkillSelector = () => {
-  const [selectedSkills, setSelectedSkills] = useState<Array<{
-    id: string;
-    name: string;
-    description: string;
-    category: string | null;
-    relatedCareers: string[];
-  }>>([]);
+  const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
   const [filterCategory, setFilterCategory] = useState<string>('');
   const [filterCareer, setFilterCareer] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -81,7 +81,7 @@ const SkillSelector = () => {
   const getSkillCategory = useCallback((skillId: string): string | null => {
     for (const category of categories) {
       const categorySkills = getSkillsByCategory(category);
-      if (categorySkills.some(skill => skill.id === skillId)) {
+      if (categorySkills.some((skill: Skill) => skill.id === skillId)) {
         return category;
       }
     }
@@ -106,14 +106,8 @@ const SkillSelector = () => {
   }, [filterCareer, categories, getSkillCategory]); // Added missing dependencies
 
 
-  const getFilteredSkills = (): Array<{
-    id: string;
-    name: string;
-    description: string;
-    category: string | null;
-    relatedCareers: string[];
-  }> => {
-    let filteredSkills = getAllSkills().map(skill => ({
+  const getFilteredSkills = (): Skill[] => {
+    let filteredSkills = getAllSkills().map((skill: Skill) => ({
       ...skill,
       category: getSkillCategory(skill.id),
       relatedCareers: getRelatedCareers(skill.id)
