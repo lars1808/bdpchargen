@@ -265,15 +265,15 @@ if (searchTerm) {
 
             {/* Bottom row: Category buttons */}
             <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
-                <CategoryButton
-                  key={category}
-                  category={category}
-                  isActive={filterCategory === category}
-                  isDisabled={filterCareer && !availableCategories.includes(category)}
-                  onClick={() => setFilterCategory(filterCategory === category ? '' : category)}
-                />
-              ))}
+            {categories.map(category => (
+  <CategoryButton
+    key={category}
+    category={category}
+    isActive={filterCategory === category}
+    isDisabled={Boolean(filterCareer && !availableCategories.includes(category))}
+    onClick={() => setFilterCategory(filterCategory === category ? '' : category)}
+  />
+))}
             </div>
             </div>
       </div>
