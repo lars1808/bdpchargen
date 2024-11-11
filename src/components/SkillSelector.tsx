@@ -73,7 +73,7 @@ const SkillSelector = () => {
 
   const categories = getCategories();
   const careers = getAllCareers();
-
+  console.log('Available careers:', careers);
   const getRelatedCareers = (skillId: string) => {
     return getCareersBySkill(skillId).map(career => career.name);
   };
@@ -113,30 +113,40 @@ const SkillSelector = () => {
       relatedCareers: getRelatedCareers(skill.id)
     }));
 
+    // Add debug logging
+    console.log('Filter career:', filterCareer);
+    
     // Apply career filter
     if (filterCareer) {
       const careerData = getCareerById(filterCareer.toLowerCase().replace(/\s+/g, '-'));
+      console.log('Career data:', careerData); // Debug log
+      
+      if (careerData) {
+        console.log('Career skills:', careerData.skills); // Debug log
+        filteredSkills = filteredSkills.filter((skill: Skill) => 
+          careerData.skills.includes(skill.id)
+        );
+      }
+    }
+
+    // Apply category filter
+    if (filterCategory) {
       filteredSkills = filteredSkills.filter((skill: Skill) => 
-        careerData?.skills.includes(skill.id)
+        getSkillCategory(skill.id) === filterCategory
       );
     }
 
-// Apply category filter
-if (filterCategory) {
-  filteredSkills = filteredSkills.filter((skill: Skill) => 
-    getSkillCategory(skill.id) === filterCategory
-  );
-}
+    // Apply search filter
+    if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+      filteredSkills = filteredSkills.filter((skill: Skill) => 
+        skill.name.toLowerCase().includes(search) ||
+        skill.description.toLowerCase().includes(search)
+      );
+    }
 
-// Apply search filter
-if (searchTerm) {
-  const search = searchTerm.toLowerCase();
-  filteredSkills = filteredSkills.filter((skill: Skill) => 
-    skill.name.toLowerCase().includes(search) ||
-    skill.description.toLowerCase().includes(search)
-  );
-}
-
+    // Debug log final results
+    console.log('Filtered skills:', filteredSkills);
     return filteredSkills;
   };
 
@@ -246,21 +256,24 @@ if (searchTerm) {
                 />
               </div>
               <select 
-                className="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
-                value={filterCareer}
-                onChange={(e) => {
-                  setFilterCareer(e.target.value);
-                  // Reset category filter if the current category isn't available for the new career
-                  if (!availableCategories.includes(filterCategory)) {
-                    setFilterCategory('');
-                  }
-                }}
-              >
-                <option value="">All Careers</option>
-                {careers.map((career: { id: string, name: string }) => (
-                  <option key={career.id} value={career.name}>{career.name}</option>
-                ))}
-              </select>
+  className="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+  value={filterCareer}
+  onChange={(e) => {
+    console.log('Selected career:', e.target.value);
+    setFilterCareer(e.target.value);
+    if (!availableCategories.includes(filterCategory)) {
+      setFilterCategory('');
+    }
+  }}
+>
+  <option value="">All Careers</option>
+  {careers.map((career: { id: string, name: string }) => {
+    console.log('Mapping career:', career);
+    return (
+      <option key={career.id} value={career.name}>{career.name}</option>
+    );
+  })}
+</select>
             </div>
 
             {/* Bottom row: Category buttons */}

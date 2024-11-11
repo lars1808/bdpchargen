@@ -112,7 +112,7 @@ const careersDatabase = {
       'trap-master'
     ]
   },
-  magicUser: {
+  "magic-user": {
     id: 'magic-user',
     name: 'Magic-User',
     description: 'Those capable of casting magic through study, pacts, or innate ability.',
