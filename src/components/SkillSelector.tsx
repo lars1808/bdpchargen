@@ -14,6 +14,8 @@ interface CategoryButtonProps {
   onClick: () => void;
 }
 
+
+
 const CategoryButton: React.FC<CategoryButtonProps> = React.memo(({ category, isActive, isDisabled, onClick }) => {
   // Color mapping for categories
   const categoryColors: Record<string, string> = {
@@ -52,17 +54,27 @@ CategoryButton.displayName = 'CategoryButton';
 
 // Rest of the component code remains exactly the same
 const SkillSelector = () => {
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const [filterCategory, setFilterCategory] = useState('');
-  const [filterCareer, setFilterCareer] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'default' });
+  const [selectedSkills, setSelectedSkills] = useState<Array<{
+    id: string;
+    name: string;
+    description: string;
+    category: string | null;
+    relatedCareers: string[];
+  }>>([]);
+  const [filterCategory, setFilterCategory] = useState<string>('');
+  const [filterCareer, setFilterCareer] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    message: string;
+    type: 'default' | 'destructive';
+  }>({ show: false, message: '', type: 'default' });
   
 
   const categories = getCategories();
   const careers = getAllCareers();
 
-  const getRelatedCareers = (skillId) => {
+  const getRelatedCareers = (skillId: string) => {
     return getCareersBySkill(skillId).map(career => career.name);
   };
 
@@ -94,7 +106,13 @@ const SkillSelector = () => {
   }, [filterCareer, categories, getSkillCategory]); // Added missing dependencies
 
 
-  const getFilteredSkills = () => {
+  const getFilteredSkills = (): Array<{
+    id: string;
+    name: string;
+    description: string;
+    category: string | null;
+    relatedCareers: string[];
+  }> => {
     let filteredSkills = getAllSkills().map(skill => ({
       ...skill,
       category: getSkillCategory(skill.id),
@@ -128,7 +146,7 @@ const SkillSelector = () => {
     return filteredSkills;
   };
 
-  const toggleSkill = (skillId, skillName, skillDescription) => {
+  const toggleSkill = (skillId: string, skillName: string, skillDescription: string) => {
     if (selectedSkills.some(skill => skill.id === skillId)) {
       setSelectedSkills(selectedSkills.filter(skill => skill.id !== skillId));
       showAlert('Skill removed', 'default');
@@ -146,7 +164,7 @@ const SkillSelector = () => {
     }
   };
 
-  const showAlert = (message, type) => {
+  const showAlert = (message: string, type: 'default' | 'destructive') => {
     setAlert({ show: true, message, type });
     setTimeout(() => setAlert({ show: false, message: '', type: 'default' }), 3000);
   };
