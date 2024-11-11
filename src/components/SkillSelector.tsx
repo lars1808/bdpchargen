@@ -47,6 +47,9 @@ const CategoryButton: React.FC<CategoryButtonProps> = React.memo(({ category, is
   );
 });
 
+
+CategoryButton.displayName = 'CategoryButton';
+
 // Rest of the component code remains exactly the same
 const SkillSelector = () => {
   const [selectedSkills, setSelectedSkills] = useState([]);
