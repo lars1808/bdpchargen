@@ -1,10 +1,17 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
-import { X, AlertCircle, Info, Search } from 'lucide-react';
+import { X, AlertCircle, Search } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { getAllSkills, getSkillsByCategory, getCategories } from '@/lib/skills';
 import { getAllCareers, getCareerById, getCareersBySkill } from '@/lib/careers';
+
+interface CategoryButtonProps {
+  category: string;
+  isActive: boolean;
+  isDisabled: boolean;
+  onClick: () => void;
+}
 
 const CategoryButton = ({ category, isActive, isDisabled, onClick }) => {
   // Color mapping for categories
@@ -46,7 +53,7 @@ const SkillSelector = () => {
   const [filterCareer, setFilterCareer] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [alert, setAlert] = useState({ show: false, message: '', type: 'default' });
-  const [showSkillInfo, setShowSkillInfo] = useState(null);
+  
 
   const categories = getCategories();
   const careers = getAllCareers();
@@ -68,18 +75,18 @@ const SkillSelector = () => {
   // Calculate available categories based on selected career
   const availableCategories = useMemo(() => {
     if (!filterCareer) return categories;
-
+  
     const careerData = getCareerById(filterCareer.toLowerCase().replace(/\s+/g, '-'));
     if (!careerData) return categories;
-
+  
     const availableCats = new Set();
     careerData.skills.forEach(skillId => {
       const category = getSkillCategory(skillId);
       if (category) availableCats.add(category);
     });
-
+  
     return Array.from(availableCats);
-  }, [filterCareer]);
+  }, [filterCareer, categories, getSkillCategory]); // Added missing dependencies
 
 
   const getFilteredSkills = () => {
