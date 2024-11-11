@@ -16,7 +16,7 @@ interface CategoryButtonProps {
 
 const CategoryButton: React.FC<CategoryButtonProps> = React.memo(({ category, isActive, isDisabled, onClick }) => {
   // Color mapping for categories
-  const categoryColors = {
+  const categoryColors: Record<string, string> = {
     'Combat': 'from-red-900 to-red-800',
     'Allies & Morale': 'from-blue-900 to-blue-800',
     'Esoteric & Arcane': 'from-purple-900 to-purple-800',
@@ -24,7 +24,7 @@ const CategoryButton: React.FC<CategoryButtonProps> = React.memo(({ category, is
     'Exploration': 'from-green-900 to-green-800',
     'Socializing': 'from-pink-900 to-pink-800',
     'Tricks & Subterfuge': 'from-indigo-900 to-indigo-800'
-  };
+  } as const;
 
   const baseStyles = "px-4 py-2 rounded-lg text-sm font-medium transition-all";
   const activeStyles = "ring-2 ring-white ring-offset-2 ring-offset-gray-900";
