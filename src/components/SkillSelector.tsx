@@ -97,7 +97,7 @@ const SkillSelector = () => {
     if (!careerData) return categories;
   
     const availableCats = new Set();
-    careerData.skills.forEach(skillId => {
+    careerData.skills.forEach((skillId: string) => {
       const category = getSkillCategory(skillId);
       if (category) availableCats.add(category);
     });
@@ -116,33 +116,33 @@ const SkillSelector = () => {
     // Apply career filter
     if (filterCareer) {
       const careerData = getCareerById(filterCareer.toLowerCase().replace(/\s+/g, '-'));
-      filteredSkills = filteredSkills.filter(skill => 
+      filteredSkills = filteredSkills.filter((skill: Skill) => 
         careerData?.skills.includes(skill.id)
       );
     }
 
-    // Apply category filter
-    if (filterCategory) {
-      filteredSkills = filteredSkills.filter(skill => 
-        getSkillCategory(skill.id) === filterCategory
-      );
-    }
+// Apply category filter
+if (filterCategory) {
+  filteredSkills = filteredSkills.filter((skill: Skill) => 
+    getSkillCategory(skill.id) === filterCategory
+  );
+}
 
-    // Apply search filter
-    if (searchTerm) {
-      const search = searchTerm.toLowerCase();
-      filteredSkills = filteredSkills.filter(skill => 
-        skill.name.toLowerCase().includes(search) ||
-        skill.description.toLowerCase().includes(search)
-      );
-    }
+// Apply search filter
+if (searchTerm) {
+  const search = searchTerm.toLowerCase();
+  filteredSkills = filteredSkills.filter((skill: Skill) => 
+    skill.name.toLowerCase().includes(search) ||
+    skill.description.toLowerCase().includes(search)
+  );
+}
 
     return filteredSkills;
   };
 
   const toggleSkill = (skillId: string, skillName: string, skillDescription: string) => {
-    if (selectedSkills.some(skill => skill.id === skillId)) {
-      setSelectedSkills(selectedSkills.filter(skill => skill.id !== skillId));
+    if (selectedSkills.some((skill: Skill) => skill.id === skillId)) {
+      setSelectedSkills(selectedSkills.filter((skill: Skill) => skill.id !== skillId));
       showAlert('Skill removed', 'default');
     } else if (selectedSkills.length < 4) {
       setSelectedSkills([...selectedSkills, { 
@@ -257,7 +257,7 @@ const SkillSelector = () => {
                 }}
               >
                 <option value="">All Careers</option>
-                {careers.map(career => (
+                {careers.map((career: { id: string, name: string }) => (
                   <option key={career.id} value={career.name}>{career.name}</option>
                 ))}
               </select>
